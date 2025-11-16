@@ -4,6 +4,7 @@ import { User, UserSchema } from "src/schemas/User.schema";
 import { UsersService } from "./users.service";
 import { UsersController } from "./users.controller";
 import { UserSetting, UserSettingSchema } from "src/schemas/UserSetting.schema";
+import { UsersSettingsService } from "src/userSettings/userSettings.service";
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { UserSetting, UserSettingSchema } from "src/schemas/UserSetting.schema";
     }])
   ],
   providers: [
-    UsersService
+    UsersService,
+    UsersSettingsService
   ],
   controllers: [
     UsersController

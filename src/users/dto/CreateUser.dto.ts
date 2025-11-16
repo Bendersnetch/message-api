@@ -1,12 +1,6 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator"
-
-export class CreateUserSettingDto {
-
-  @IsOptional()
-  @IsBoolean()
-  recieveNotifications: Boolean;
-
-}
+import { Type } from "class-transformer";
+import { IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator"
+import { CreateUserSettingDto } from "src/userSettings/dto/CreateUserSetting.dto"
 
 export class CreateUserDto {
 
@@ -20,5 +14,6 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @ValidateNested()
+  @Type(() => CreateUserSettingDto)
   settings?: CreateUserSettingDto;
 }

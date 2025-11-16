@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, HttpException, Param, Patch, Post } from
 import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/CreateUser.dto";
 import { UpdateUserDto } from "./dto/UpdateUser.dto";
-import mongoose from "mongoose";
 
 @Controller('users')
 export class UsersController {
@@ -18,34 +17,25 @@ export class UsersController {
     return this.usersService.getUsers();
   }
 
-  @Get(':id')
-  async getUsersById(@Param('id') id: string) {
-    const isValid = mongoose.Types.ObjectId.isValid(id);
-    if(!isValid) throw new HttpException('Invalid Id', 400);
-
-    const findUser = await this.usersService.getUserById(id);
+  @Get(':username')
+  async getUsersById(@Param('username') username: string) {
+    const findUser = await this.usersService.getUserByUsername(username);
     if(!findUser) throw new HttpException('User not found', 404);
     
     return findUser;
   }
 
-  @Patch(':id')
-  updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    const isValid = mongoose.Types.ObjectId.isValid(id);
-    if(!isValid) throw new HttpException('Invalid Id', 400);
-
-    const updateUser = this.usersService.updateUser(id, updateUserDto);
+  @Patch(':username')
+  updateUser(@Param('username') username: string, @Body() updateUserDto: UpdateUserDto) {
+    const updateUser = this.usersService.updateUser(username, updateUserDto);
     if(!updateUser) throw new HttpException('User Not Found', 404);
   
     return updateUser;
   }
 
-  @Delete(':id')
-  async deleteUser(@Param('id') id: string) {
-    const isValid = mongoose.Types.ObjectId.isValid(id);
-    if(!isValid) throw new HttpException('Invalid Id', 400);
-
-    const deletedUser = await this.usersService.deleteUser(id);
+  @Delete(':username')
+  async deleteUser(@Param('username') username: string) {
+    const deletedUser = await this.usersService.deleteUser(username);
     if(!deletedUser) throw new HttpException('User Not Found', 404);
 
     return deletedUser;

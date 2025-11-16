@@ -4,12 +4,12 @@ import { Model } from "mongoose";
 import { User } from "src/schemas/User.schema";
 import { CreateUserDto } from "./dto/CreateUser.dto";
 import { UpdateUserDto } from "./dto/UpdateUser.dto";
-import { CreateUserSettingDto } from "src/userSettings/dto/CreateUserSetting.dto";
 import { UserSetting } from "src/schemas/UserSetting.schema";
+import { UsersSettingsService } from "src/userSettings/userSettings.service";
 
 @Injectable()
 export class UsersService {
-  constructor (@InjectModel(User.name) private userModel: Model<User>, @InjectModel(UserSetting.name) private userSettingModel: Model<UserSetting>) {}
+  constructor (@InjectModel(User.name) private userModel: Model<User>, @InjectModel(UserSetting.name) private userSettingModel: Model<UserSetting>, private userSettingService: UsersSettingsService) {}
 
   async createUser({settings, ...createUserDto}: CreateUserDto) {
     const newSettings = new this.userSettingModel(settings)
@@ -26,15 +26,20 @@ export class UsersService {
     return this.userModel.find().populate('settings')
   }
 
-  getUserById(id: string) {
-    return this.userModel.findById(id).populate('settings');
+  getUserByUsername(username: string) {
+    return this.userModel.findOne({"username": username}).populate('settings');
   }
 
-  updateUser(id: string, updateUserDto: UpdateUserDto) {
-    return this.userModel.findByIdAndUpdate(id, {$set: updateUserDto}, {new: true});
+  async updateUser(username: string, {settings, ...updateUserDto}: UpdateUserDto) {
+    
+    if(settings) {
+      const newUserSetting = await this.userSettingService.updateUserSetting(settings)
+    }
+
+    return this.userModel.findOneAndUpdate({"username": username}, {$set: updateUserDto}, {new: true}).populate('settings');
   }
 
-  deleteUser(id: string) {
-    return this.userModel.findByIdAndDelete(id)
+  deleteUser(username: string) {
+    return this.userModel.findOneAndDelete({"username": username})
   }
 }

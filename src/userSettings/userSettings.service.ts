@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { UserSetting } from "src/schemas/UserSetting.schema";
 import { CreateUserSettingDto } from "./dto/CreateUserSetting.dto";
+import { UpdateUserSettingDto } from "./dto/UpdateUserSetting.dto";
 
 @Injectable()
 export class UsersSettingsService {
@@ -16,6 +17,10 @@ export class UsersSettingsService {
 
   getUserSettingsById(id: string) {
     return this.userSettingModel.findById(id);
+  }
+
+  updateUserSetting({_id, ...updateUserSettingDto}: UpdateUserSettingDto) {
+    return this.userSettingModel.findByIdAndUpdate(_id, {$set: updateUserSettingDto}, {new: true});
   }
 
   deleteUserSettings(id: string) {
