@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose from "mongoose";
 import { UserSetting } from "./UserSetting.schema";
 
-@Schema({ _id: false })
+@Schema()
 export class User {
   
   @Prop({ unique: true })
